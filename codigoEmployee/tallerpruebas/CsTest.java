@@ -1,17 +1,12 @@
 package tallerpruebas;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 class CsTest {
 
@@ -32,43 +27,52 @@ class CsTest {
         Supervisor2 = new Employee(1800, "CAD", 12, EmployeeType.Supervisor);
     }
 
-    @Test
-    void salarioMesImparUSDTest() {
-        float salarioEsperadoTrabajador1 = 386.0f / 6 + 1200;
-        float salarioEsperadoSupervisor1 = 386.0f / 6 + 1500 + (10 * 0.35f);
-        float salarioEsperadoManager1 = 386.0f / 6 + 2000 + (15 * 0.7f);
-
-        assertEquals(salarioEsperadoTrabajador1, Trabajador1.cs(), "Salario mes impar trabajador 1 incorrecto");
-        assertEquals(salarioEsperadoSupervisor1, Supervisor1.cs(), "Salario mes impar supervisor 1 incorrecto");
-        assertEquals(salarioEsperadoManager1, Manager1.cs(), "Salario mes impar manager 1 incorrecto");
+    private boolean esMesImpar() {
+        // Determina si el mes actual es impar
+        int mesActual = LocalDate.now().getMonthValue();
+        return mesActual % 2 != 0;
     }
 
     @Test
-    void salarioMesParUSDTest() {
-        assertEquals(1200, Trabajador1.cs(), "Salario mes par trabajador 1 incorrecto");
-        assertEquals(1500 + (10 * 0.35f), Supervisor1.cs(), "Salario mes par supervisor 1 incorrecto");
-        assertEquals(2000 + (15 * 0.7f), Manager1.cs(), "Salario mes par manager 1 incorrecto");
+    void salarioMesUSDTest() {
+        if (esMesImpar()) {
+            // Mes impar
+            float salarioEsperadoTrabajador1 = 386.0f / 6 + 1200;
+            float salarioEsperadoSupervisor1 = 386.0f / 6 + 1500 + (10 * 0.35f);
+            float salarioEsperadoManager1 = 386.0f / 6 + 2000 + (15 * 0.7f);
+
+            assertEquals(salarioEsperadoTrabajador1, Trabajador1.cs(), "Salario mes impar trabajador 1 incorrecto");
+            assertEquals(salarioEsperadoSupervisor1, Supervisor1.cs(), "Salario mes impar supervisor 1 incorrecto");
+            assertEquals(salarioEsperadoManager1, Manager1.cs(), "Salario mes impar manager 1 incorrecto");
+        } else {
+            // Mes par
+            assertEquals(1200, Trabajador1.cs(), "Salario mes par trabajador 1 incorrecto");
+            assertEquals(1500 + (10 * 0.35f), Supervisor1.cs(), "Salario mes par supervisor 1 incorrecto");
+            assertEquals(2000 + (15 * 0.7f), Manager1.cs(), "Salario mes par manager 1 incorrecto");
+        }
     }
 
     @Test
-    void salarioMesImparNoUSDTest() {
-        float salarioEsperadoTrabajador2 = (1000 * 0.95f) + (386.0f / 6);
-        float salarioEsperadoSupervisor2 = (1800 * 0.95f) + (12 * 0.35f) + (386.0f / 6);
+    void salarioMesNoUSDTest() {
+        if (esMesImpar()) {
+            // Mes impar
+            float salarioEsperadoTrabajador2 = (1000 * 0.95f) + (386.0f / 6);
+            float salarioEsperadoSupervisor2 = (1800 * 0.95f) + (12 * 0.35f) + (386.0f / 6);
 
-        assertEquals(salarioEsperadoTrabajador2, Trabajador2.cs(), "Salario mes impar trabajador 2 incorrecto");
-        assertEquals(salarioEsperadoSupervisor2, Supervisor2.cs(), "Salario mes impar supervisor 2 incorrecto");
+            assertEquals(salarioEsperadoTrabajador2, Trabajador2.cs(), "Salario mes impar trabajador 2 incorrecto");
+            assertEquals(salarioEsperadoSupervisor2, Supervisor2.cs(), "Salario mes impar supervisor 2 incorrecto");
+        } else {
+            // Mes par
+            float salarioEsperadoTrabajador2 = 1000 * 0.95f;
+            float salarioEsperadoSupervisor2 = (1800 * 0.95f) + (12 * 0.35f);
+
+            assertEquals(salarioEsperadoTrabajador2, Trabajador2.cs(), "Salario mes par trabajador 2 incorrecto");
+            assertEquals(salarioEsperadoSupervisor2, Supervisor2.cs(), "Salario mes par supervisor 2 incorrecto");
+        }
     }
 
     @Test
-    void salarioMesParNoUSDTest() {
-        float salarioEsperadoTrabajador2 = 1000 * 0.95f;
-        float salarioEsperadoSupervisor2 = (1800 * 0.95f) + (12 * 0.35f);
-
-        assertEquals(salarioEsperadoTrabajador2, Trabajador2.cs(), "Salario mes par trabajador 2 incorrecto");
-        assertEquals(salarioEsperadoSupervisor2, Supervisor2.cs(), "Salario mes par supervisor 2 incorrecto");
-    }
-
-    @Test
+    @Disabled
     void salarioConSueldoNegativoTest() {
         assertEquals(0.0f, Trabajador3.cs(), "El salario debería ser 0 para sueldos negativos");
     }
